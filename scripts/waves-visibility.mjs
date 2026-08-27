@@ -63,18 +63,23 @@ function wallOverlapsElevationRange(wall, bottom, top) {
 	return getWallElevationRanges(wall).some((range) => range.bottom < top && range.top > bottom);
 }
 
+function hasBlockingWallVolumeCollision(origin, destination, bottom, top) {
+	if (!canvas.dimensions.rect.contains(origin.x, origin.y)) return false;
+	for (const level of canvas.scene.levels) {
+		const collisions = CONFIG.Canvas.polygonBackends.move.testCollision(origin, destination, { type: 'move', mode: 'all', level });
+		if (collisions.some((collision) => Array.from(collision.edges).some((edge) => wallOverlapsElevationRange(edge.object, bottom, top)))) return true;
+	}
+	return false;
+}
+
 function isPointOnSightWall(point) {
 	return canvas.walls.placeables.some((wall) => {
 		const document = wall.document;
 		if (document.sight === CONST.EDGE_SENSE_TYPES.NONE) return false;
 		if (document.door && document.ds === CONST.WALL_DOOR_STATES.OPEN) return false;
 		if (!wallBlocksAtElevation(document, point.elevation)) return false;
-		const [x1, y1, x2, y2] = document.c;
-		const dx = x2 - x1;
-		const dy = y2 - y1;
-		const lengthSquared = dx * dx + dy * dy;
-		const t = lengthSquared ? Math.clamp(((point.x - x1) * dx + (point.y - y1) * dy) / lengthSquared, 0, 1) : 0;
-		return Math.hypot(point.x - (x1 + t * dx), point.y - (y1 + t * dy)) <= 1;
+		const closest = foundry.utils.closestPointToSegment(point, wall.edge.a, wall.edge.b);
+		return Math.hypot(point.x - closest.x, point.y - closest.y) <= 1;
 	});
 }
 
@@ -82,7 +87,7 @@ function getSourceSampleAnchor(document, origin, xyPoints, elevation) {
 	const center = { x: origin.x, y: origin.y, elevation };
 	if (!isPointOnSightWall(center)) return center;
 	const previous = sourceAnchorHistory.get(document.uuid);
-	const reference = previous && (previous.x !== origin.x || previous.y !== origin.y) ? previous : Array.from(xyPoints.values()).find((point) => point.x !== origin.x || point.y !== origin.y);
+	const reference = previous && !(previous.x.almostEqual(origin.x) && previous.y.almostEqual(origin.y)) ? previous : Array.from(xyPoints.values()).find((point) => !(point.x.almostEqual(origin.x) && point.y.almostEqual(origin.y)));
 	if (!reference) return center;
 	const distance = Math.hypot(reference.x - origin.x, reference.y - origin.y);
 	if (!distance) return center;
@@ -161,6 +166,8 @@ export function refreshWallHeightOverlay() {
 		if (wall.document.move === CONST.WALL_MOVEMENT_TYPES.NONE) continue;
 		if (!game.user.isGM && wall.document.door === CONST.WALL_DOOR_TYPES.SECRET) continue;
 		if (wallOverlapsElevationRange(wall.document, bottom, top)) continue;
+		const [x1, y1, x2, y2] = wall.document.c;
+		if (hasBlockingWallVolumeCollision(token.center, { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }, bottom, top)) continue;
 		drawDashedWall(graphics, wall.document.c, 0x00ff88);
 	}
 	wallHeightOverlay = graphics;
@@ -776,7 +783,7 @@ function getSampledVisionSources(visionSource) {
 	const coreOrigin = token.document.getVisionOrigin();
 	const sources = getVisionOrigins(token, { includePeeking: false })
 		.filter((origin) => hasMatchingSurfaceFootprint(origin, coreOrigin, token.document.level))
-		.filter((origin) => origin.x !== coreOrigin.x || origin.y !== coreOrigin.y || origin.elevation !== coreOrigin.elevation)
+		.filter((origin) => !(origin.x.almostEqual(coreOrigin.x) && origin.y.almostEqual(coreOrigin.y) && origin.elevation.almostEqual(coreOrigin.elevation)))
 		.map((origin, index) => {
 			const source = new CONFIG.Canvas.visionSourceClass({ sourceId: `${token.sourceId}.waves.${index}`, object: token });
 			source.initialize({ ...data, x: origin.x, y: origin.y, elevation: origin.elevation, level: origin.level ?? data.level });
