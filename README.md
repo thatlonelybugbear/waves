@@ -88,6 +88,8 @@ In WAVES mode, Token Configuration provides optional overrides for eye height, v
 
 Any visible sample makes the target visible. Total cover prevents it from being attackable through the WAVES API.
 
+WAVES currently reports cover and its suggested bonus through the API only. It does not apply attack modifiers, conditions, or other automation. Integrations with systems or automation modules such as Automated Conditions 5e or Midi-QOL may be added later.
+
 ## Automatic peeking
 
 Peeking adds target-specific origins around nearby blocking cover, including limited over-wall and under-wall positions.
