@@ -185,14 +185,18 @@ export function registerSettings() {
 
 export function renderSettingsConfig(_app, html) {
 	const root = html instanceof HTMLElement ? html : html?.[0];
+	if (!root) return;
 	const sampledSettings = ['peekingMode', 'visibilitySampleMode', 'visionSourceMode', ...Object.keys(EYE_SETTING_DEFAULTS)];
 	const updateSampledSettings = () => {
 		const sampled = root?.querySelector(`[name="${MODULE_ID}.visibilityCalculationMode"]`)?.value === 'sampled';
 		for (const key of sampledSettings) root?.querySelector(`[name="${MODULE_ID}.${key}"]`)?.closest('.form-group')?.toggleAttribute('hidden', !sampled);
 	};
-	root?.addEventListener('change', (event) => {
+	root.addEventListener('change', (event) => {
 		if (event.target?.name === `${MODULE_ID}.visibilityCalculationMode`) updateSampledSettings();
 	});
+	_app._wavesSettingsObserver?.disconnect();
+	_app._wavesSettingsObserver = new MutationObserver(updateSampledSettings);
+	_app._wavesSettingsObserver.observe(root, { childList: true, subtree: true });
 	updateSampledSettings();
 	for (const [key, value] of Object.entries(EYE_SETTING_DEFAULTS)) {
 		const picker = root?.querySelector(`range-picker[name="${MODULE_ID}.${key}"]`);
