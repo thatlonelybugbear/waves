@@ -1,0 +1,44 @@
+<section class='waves-links-menu-body'>
+	<div class='waves-links-group'>
+		<div class='waves-links-menu-label'>
+			{{localize "WAVES.LinksMenu.GitHubMessage"}}
+		</div>
+		<div class='waves-links-row waves-links-row-primary'>
+			{{#each primaryLinks}}
+				<button type='button' class='waves-links-menu-button' data-action='openLink' data-url='{{url}}'>
+					<i class='{{icon}}' inert></i>
+					<span>{{label}}</span>
+				</button>
+			{{/each}}
+		</div>
+	</div>
+
+	<div class='waves-links-row waves-links-row-combined'>
+		<div class='waves-links-group'>
+			<div class='waves-links-menu-label'>
+				{{localize "WAVES.LinksMenu.DiscordMessage"}}
+			</div>
+			<div class='waves-links-row waves-links-row-secondary'>
+				{{#each secondaryLinks}}
+					<button type='button' class='waves-links-menu-button' data-action='openLink' data-url='{{url}}'>
+						<i class='{{icon}}' inert></i>
+						<span>{{label}}</span>
+					</button>
+				{{/each}}
+			</div>
+		</div>
+		<div class='waves-links-group'>
+			<div class='waves-links-menu-label'>
+				{{localize "WAVES.LinksMenu.SupportMessage"}}
+			</div>
+			<div class='waves-links-row waves-links-row-tertiary'>
+				{{#each tertiaryLinks}}
+					<button type='button' class='waves-links-menu-button' data-action='openLink' data-url='{{url}}'>
+						<i class='{{icon}}' inert></i>
+						<span>{{label}}</span>
+					</button>
+				{{/each}}
+			</div>
+		</div>
+	</div>
+</section>

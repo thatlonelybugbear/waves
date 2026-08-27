@@ -1,0 +1,63 @@
+.waves-links-menu-body {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.waves-links-group {
+	display: flex;
+	flex: 1 1 0;
+	flex-direction: column;
+	gap: 0.25rem;
+	min-width: 0;
+}
+
+.waves-links-row {
+	display: flex;
+	gap: 0.5rem;
+	width: 100%;
+}
+
+.waves-links-row-primary {
+	justify-content: center;
+}
+
+.waves-links-row-secondary {
+	justify-content: center;
+}
+
+.waves-links-row-tertiary {
+	justify-content: center;
+}
+
+.waves-links-row-combined {
+	align-items: flex-end;
+}
+
+.waves-links-menu-label {
+	text-align: center;
+	font-size: var(--font-size-13);
+	font-style: italic;
+	opacity: 0.8;
+}
+
+.waves-links-row-primary .waves-links-menu-button,
+.waves-links-row-secondary .waves-links-menu-button,
+.waves-links-row-tertiary .waves-links-menu-button {
+	flex: 1 1 0;
+	min-width: 0;
+}
+
+.waves-links-menu-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.4rem;
+	min-width: 0;
+}
+
+.waves-links-menu-button span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

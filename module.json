@@ -1,0 +1,34 @@
+{
+	"id": "waves",
+	"title": "Walls And Vision Elevation Sampling",
+	"description": "Height-aware walls, vision, visibility sampling, cover, and peeking.",
+	"version": "14.367.1",
+	"compatibility": { "minimum": "14.367", "verified": "14.367", "maximum": "14" },
+	"authors": [
+		{
+			"name": "thatlonelybugbear",
+			"url": "https://github.com/thatlonelybugbear",
+			"discord": "thatlonelybugbear#4394",
+			"ko-fi": "https://ko-fi.com/thatlonelybugbear",
+			"patreon": "https://www.patreon.com/cw/thatlonelybugbear"
+		}
+	],
+	"esmodules": ["scripts/waves-main.mjs"],
+	"styles": ["styles/waves.css"],
+	"languages": [{ "lang": "en", "path": "lang/en.json", "name": "English" }],
+	"relationships": {
+		"requires": [{ "id": "lib-wrapper", "type": "module", "manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/latest/download/module.json", "compatibility": { "verified": "1.12.12.1" } }]
+	},
+	"flags": {
+		"hotReload": {
+			"extensions": ["json", "css", "hbs"],
+			"paths": ["lang", "styles", "templates"]
+		}
+	},
+	"bugs": "https://github.com/thatlonelybugbear/waves/issues",
+	"url": "https://github.com/thatlonelybugbear/waves",
+	"license": "https://raw.githubusercontent.com/thatlonelybugbear/waves/main/LICENSE",
+	"manifest": "https://github.com/thatlonelybugbear/waves/releases/latest/download/module.json",
+	"download": "https://github.com/thatlonelybugbear/waves/releases/download/v14.367.1/module.zip",
+	"changelog": "https://raw.githubusercontent.com/thatlonelybugbear/waves/main/Changelog.md"
+}

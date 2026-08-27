@@ -1,0 +1,39 @@
+{
+  "WAVES": {
+    "LinksMenu": {
+      "Name": "Module Support",
+      "Label": "Links",
+      "Hint": "Open WAVES documentation, issue tracker, and support links.",
+      "GitHubMessage": "GitHub Links",
+      "DiscordMessage": "Enter the Den",
+      "SupportMessage": "Toss a Coin to your Bugbear",
+      "Title": "Resources & Support: WAVES"
+    },
+    "Wall": { "Height": "Wall height", "Bottom": "Wall Bottom", "Top": "Wall Top", "HeightHint": "Levels are assigned automatically from this elevation range." },
+    "Settings": {
+      "PeekingMode": { "Name": "Automatic peeking", "Hint": "Allow tokens adjacent to sight-blocking cover to use target-specific peeking positions. Outside combat, eligible tokens may peek; during combat, only the active combatant may peek.", "Disabled": "Off", "Auto": "On" },
+      "VisibilitySampleMode": { "Name": "Target area", "Hint": "Choose how much of the target is tested when deciding visibility and cover.", "Grid": "Whole occupied space", "Body": "Smaller body area" },
+      "VisionSourceMode": { "Name": "Viewing position", "Hint": "Choose whether a token looks from its center or from several points within its occupied space.", "Singular": "Center", "Grid": "Whole occupied space" },
+      "NewWallHeightMode": { "Name": "New wall height", "Hint": "Keep Foundry's viewed-Level assignment for newly drawn walls and also match their WAVES bottom/top heights, or make them apply unbounded across all Levels. Use the Toggle new wall height mode keybinding (Alt+W by default) to switch modes before drawing a wall.", "Level": "Viewed Level (Foundry default)", "Unbounded": "All Levels (Unbounded)" },
+      "VisibilityCalculationMode": { "Name": "Visibility mode", "Hint": "Use Foundry's center-based visibility with height-aware walls, or WAVES sampled visibility and cover.", "Foundry": "Foundry", "Sampled": "WAVES" },
+      "EyeHeightPercent": { "Name": "Eye height", "Hint": "Default eye position as a percentage of the token's vertical depth." },
+      "EyeTolerancePercent": { "Name": "Vertical eye movement", "Hint": "How far a token can normally look above or below its eye height, as a percentage of its vertical depth." },
+      "EyeSampleCount": { "Name": "Vertical eye positions", "Hint": "Number of eye positions tested across the allowed vertical movement." },
+      "TokenVision": { "Legend": "WAVES", "Automatic": "Automatic", "Airborne": "Airborne state", "Grounded": "Grounded", "Flying": "Airborne" },
+      "ResetEyeSetting": "Reset to default",
+      "ShowPassableWallOverlay": { "Name": "Show height-passable walls", "Hint": "Draw green dashed overlays for walls that do not overlap the controlled token's current vertical volume." },
+      "SynchronizeTokenLevel": { "Name": "Synchronize token Level with elevation", "Hint": "Prompt to move tokens to a matching Level when their elevation crosses a Level boundary. WAVES disables this handling when Elevation Level Change module is active." },
+      "PerformanceDebug": { "Name": "Performance debug", "Hint": "Log aggregated WAVES timing data to the console." }
+    },
+    "LevelTransition": { "Title": "WAVES: Change Token Level", "Confirm": "Move {token} to {level}?", "Level": "Level", "CompatibilityWarning": "WAVES: Elevation Level Change module is active, so WAVES token Level synchronization is disabled. Elevation Level Change may permit token elevation and Level to become mismatched." },
+    "Keybindings": {
+      "ToggleNewWallHeightMode": { "Name": "Toggle new wall height mode", "Hint": "Switch the new-wall placement mode between Viewed Level and All Levels (Unbounded)." }
+    },
+    "Notifications": {
+      "NewWallHeightMode": {
+        "Level": "WAVES: New wall height — Viewed Level (Foundry default)",
+        "Unbounded": "WAVES: New wall height — All Levels (Unbounded)"
+      }
+    }
+  }
+}
