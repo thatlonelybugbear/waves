@@ -1,3 +1,6 @@
+## 14.370.1.1
+* Cap cover from intervening creatures at Half Cover in D&D5e, while preserving stronger cover from walls and surfaces.
+
 ## 14.370.1
 * Support Foundry VTT 14.370.
 * Add Brazilian Portuguese localization.

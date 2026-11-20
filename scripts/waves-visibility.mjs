@@ -249,14 +249,14 @@ function hasBlockingTokenCollision(origin, destination, source, target) {
 		let tMax = 1;
 		for (const [start, delta, min, max] of [[origin.x, dx, bounds.left, bounds.right], [origin.y, dy, bounds.top, bounds.bottom], [origin.elevation, dz, bottom, top]]) {
 			if (!delta) {
-				if (start < min || start > max) return false;
+				if (start <= min || start >= max) return false;
 				continue;
 			}
 			const a = (min - start) / delta;
 			const b = (max - start) / delta;
 			tMin = Math.max(tMin, Math.min(a, b));
 			tMax = Math.min(tMax, Math.max(a, b));
-			if (tMin > tMax) return false;
+			if (tMin >= tMax) return false;
 		}
 		return tMax > 0 && tMin < 1;
 	});
@@ -503,6 +503,11 @@ function getTokenVolumeCorners(subject) {
 	return xs.flatMap((x) => ys.flatMap((y) => zs.map((elevation) => ({ x, y, elevation, level: document.level }))));
 }
 
+function effectiveUncoveredSamples(uncovered, tokenBlocked, total) {
+	if (!tokenBlocked || game.system?.id !== 'dnd5e') return uncovered;
+	return Math.max(uncovered, Math.min(uncovered + tokenBlocked, total / 2));
+}
+
 function measureCornerCover(source, target, { type, includeSurfaces, tokenCover, peekOrigins = [] }) {
 	const corners = getTokenVolumeCorners(source);
 	const center = getVisibilityPoint(source);
@@ -515,6 +520,7 @@ function measureCornerCover(source, target, { type, includeSurfaces, tokenCover,
 	}), ...peekOrigins];
 	const destinations = getTokenVolumeCorners(target);
 	let best = { origin: null, results: [], uncoveredSamples: 0, totalSamples: destinations.length };
+	let bestScore = -1;
 	for (const origin of origins) {
 		const results = destinations.map((destination) => {
 			const wallCollision = hasBlockingWallCollision(origin, destination, type, getWallCollisionOptions(source));
@@ -523,7 +529,11 @@ function measureCornerCover(source, target, { type, includeSurfaces, tokenCover,
 			return { origin, destination, wallCollision, surfaceCollision, tokenCollision, visible: !wallCollision && !surfaceCollision && !tokenCollision };
 		});
 		const uncoveredSamples = results.filter((result) => result.visible).length;
-		if (!best.origin || uncoveredSamples > best.uncoveredSamples) best = { origin, results, uncoveredSamples, totalSamples: destinations.length };
+		const score = effectiveUncoveredSamples(uncoveredSamples, results.filter((result) => result.tokenCollision).length, destinations.length);
+		if (score > bestScore || (score === bestScore && uncoveredSamples > best.uncoveredSamples)) {
+			bestScore = score;
+			best = { origin, results, uncoveredSamples, totalSamples: destinations.length };
+		}
 	}
 	return best;
 }
@@ -747,10 +757,11 @@ export function measureVisibility(source, target, { showTestSamples = false, typ
 	};
 	const totalSamples = samples.length;
 	const percentage = totalCoverSamples ? (uncoveredSamples / totalCoverSamples) * 100 : 0;
+	const effectiveUncovered = effectiveUncoveredSamples(uncoveredSamples, coverDetails.tokenBlockedSamples, totalCoverSamples);
 	const cover =
-		percentage === 0 ? 'total'
-		: percentage <= 25 ? 'threeQuarters'
-		: percentage <= 50 ? 'half'
+		effectiveUncovered === 0 ? 'total'
+		: effectiveUncovered <= totalCoverSamples / 4 ? 'threeQuarters'
+		: effectiveUncovered <= totalCoverSamples / 2 ? 'half'
 		: 'none';
 	const visible = visibleSamples > 0;
 

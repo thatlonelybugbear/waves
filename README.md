@@ -96,6 +96,8 @@ Any geometrically visible sample gives the target line of sight, subject to Foun
 
 When **Token-to-token cover** is enabled, intervening non-hidden tokens can reduce the uncovered target samples using their TokenDocument horizontal footprint, elevation, and depth. Tokens do not block binary visibility or the rendered vision mask.
 
+In D&D5e, intervening tokens contribute up to Half Cover. WAVES counts rays blocked by walls, surfaces, and tokens together, so blockers that intercept different rays can jointly grant Half Cover. For example, if a wall blocks two of eight corner rays and a token blocks two other rays, the target has Half Cover. Three-Quarters Cover and Total Cover require enough rays to be blocked by walls or surfaces alone. The reported uncovered percentage reflects the actual sample counts.
+
 Cover checks, including peeking and corner samples, support TokenDocuments without rendered Token objects. Intervening tokens are read from the Scene's documents, including tokens on other Levels. Calculations require the currently viewed Scene; passing a token from another Scene throws an error because collision checks use the active canvas.
 
 WAVES reports cover and its suggested bonus through the API. Automated Conditions 5e integrates with WAVES for cover automation in the D&D5e system only. WAVES itself does not apply attack modifiers, conditions, or other automation.
@@ -187,7 +189,7 @@ const result = waves.measureVisibility(sourceToken, targetToken, {
 
 The result includes `visible`, `detected`, `attackable`, `attackableInTurn`, `percentage`, `cover`, `coverBonus`, sample counts, and peeking information. Here `detected` means the geometry allows sight and the target passes the hidden-token check. Use Foundry's player view to check actual detection with lighting, range, and special senses.
 
-`visibleSamples / totalSamples` describes geometric visibility. `uncoveredSamples / totalCoverSamples` determines `percentage` and cover; corner mode tests eight target corners. These are geometry results, not a replacement for Foundry's lighting, range, or special-sense detection checks.
+`visibleSamples / totalSamples` describes geometric visibility. `percentage` reports the raw uncovered share (`uncoveredSamples / totalCoverSamples`). Use `cover` for the final tier, which accounts for the D&D5e Half Cover cap on intervening creatures. For example, a creature blocking every ray can yield `percentage: 0` and `cover: 'half'`. Corner mode tests eight target corners. These are geometry results, not a replacement for Foundry's lighting, range, or special-sense detection checks.
 
 Sampled results also include `coverDetails`: the selected corner `origin` (null for combined sampled origins), `wallBlockedSamples`, `surfaceBlockedSamples`, `tokenBlockedSamples`, `unreachableSamples`, `uncoveredSamples`, and `totalSamples`. Blocker counts follow wall > surface > token precedence; they are not independently calculated cover categories. Corner origins must be reachable from the source's center at that height. Eligible peeking positions still follow the peeking setting and combat turn.
 
